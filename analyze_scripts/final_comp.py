@@ -3,7 +3,7 @@ from scipy import stats
 
 # Data: win rates per seed (5 seeds each)
 dqn_winrates = np.array([0.590, 0.590, 0.566, 0.582, 0.572])
-cae_winrates = np.array([0.726, 0.722, 0.724, 0.746, 0.712])
+cae_winrates = np.array([0.708, 0.708, 0.688, 0.656, 0.720])
 
 # Descriptive statistics
 mean_dqn = np.mean(dqn_winrates)

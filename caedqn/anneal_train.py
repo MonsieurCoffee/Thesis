@@ -81,7 +81,7 @@ def main():
             new_state, reward, done = env.step(action)
 
             # Compute CAE exploration bonus
-            bonus = agent.compute_bonus(current_state)
+            bonus = agent.compute_bonus(new_state) if not done else 0
             augmented_reward = reward + bonus
 
             episode_reward += augmented_reward
