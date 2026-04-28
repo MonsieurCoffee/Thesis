@@ -12,7 +12,6 @@ import tensorflow as tf
 from minesweeper_env import MinesweeperEnv
 from caedqn_agent import CAEDQNAgent, BETA, RIDGE
 
-# ========== Training Hyperparameters ==========
 WIDTH = 6
 HEIGHT = 6
 N_MINES = 4
@@ -68,12 +67,11 @@ def main():
             action = agent.get_action(current_state)
             new_state, reward, done = env.step(action)
 
-            # --- CAE exploration bonus ---
+            # CAE Exploration Bonus
             bonus = agent.compute_bonus(new_state) if not done else 0
             augmented_reward = reward + bonus
-            # -----------------------------
 
-            episode_reward += augmented_reward   # track augmented reward
+            episode_reward += augmented_reward   # Track Augmented Reward
             agent.update_replay_memory((current_state, action, augmented_reward, new_state, done))
             agent.train(done)
 

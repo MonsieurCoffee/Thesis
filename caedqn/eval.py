@@ -13,7 +13,7 @@ from tensorflow.keras.models import load_model #type:ignore
 from minesweeper_env import MinesweeperEnv
 
 # ========== Configuration ==========
-MODEL_PATH = "caedqn_best.keras"       # path to your saved CAE-DQN model
+MODEL_PATH = "caedqn_best.keras"
 BOARD_SIZE = 6
 N_MINES = 4
 EVAL_SEEDS = [1, 2, 3, 4, 5]

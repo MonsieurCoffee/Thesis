@@ -6,15 +6,15 @@ import tensorflow as tf
 from minesweeper_env import MinesweeperEnv
 
 # ==================== CONFIGURATION ====================
-AGENT_TYPE = 'dqn'                     # 'dqn' or 'caedqn'
-MODEL_PATH = 'dqn/dqn_best.keras'   # path to model
-NUM_EPISODES = 50                         # total episodes to run
-AUTO_ADVANCE = True                       # True = auto next episode, False = press Enter to continue
+AGENT_TYPE = 'dqn'                          # 'dqn' or 'caedqn'
+MODEL_PATH = 'dqn/dqn_best.keras'           # path to model
+NUM_EPISODES = 50                           # total episodes to run
+AUTO_ADVANCE = True                         # True = auto next episode, False = press Enter to continue
 # =======================================================
 
 # Environment settings
 TIME = 0.01
-BASE_SEED = 300          # None = truly random boards each run
+BASE_SEED = 300          
 ROWS, COLS, MINES = 6, 6, 4
 
 # Create environment ONCE (same as training)

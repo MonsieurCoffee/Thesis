@@ -3,18 +3,15 @@ import random
 import numpy as np
 
 class MinesweeperEnv:
-    """
-    Minesweeper environment for DQN training.
-    Uses one‑hot encoding (10 channels) as described in Wang et al. (2025).
-    Reward structure: win=+36, lose=-36, progress=+1, guess=-0.5, no_progress=-0.5.
-    """
+    # Initialize Board
     def __init__(self, width, height, n_mines, seed=None, rewards=None):
+        # Storing Board Dimensions
         self.n_rows = width
         self.n_cols = height
         self.n_tiles = self.n_rows * self.n_cols
         self.n_mines = n_mines
 
-        # Default reward structure (scaled for 6x6 board, 36 cells)
+        # Default Reward Structure
         if rewards is None:
             self.rewards = {
                 'win': 36,
@@ -22,38 +19,43 @@ class MinesweeperEnv:
                 'progress': 1.0,
             }
         else:
-            self.rewards = rewards
+            self.rewards = rewards  # Manual Reward Input
 
-        # Internal state
-        self.grid = np.zeros((self.n_rows, self.n_cols), dtype=object)
-        self.board = np.zeros((self.n_rows, self.n_cols), dtype=object)
-        self.state = []               # list of dicts with 'coord' and 'value'
-        self.state_im = np.zeros((self.n_rows, self.n_cols, 10), dtype=np.float32)
-        self.n_clicks = 0
-        self.n_progress = 0
-        self.n_wins = 0
+        # Internal Data Containers
+        self.grid = np.zeros((self.n_rows, self.n_cols), dtype=object)              # Hidden Mine Layout
+        self.board = np.zeros((self.n_rows, self.n_cols), dtype=object)             # Computed Number Layout
+        self.state = []                                                             # Internal State Memory
+        self.state_im = np.zeros((self.n_rows, self.n_cols, 10), dtype=np.float32)  # One-Hot Encoded Image
 
+        # Counters
+        self.n_clicks = 0       # Agent Clicks
+        self.n_progress = 0     # Progress
+        self.n_wins = 0         # Boolean Win Condition
+
+        # Manual Seed Input
         if seed is not None:
             self.set_seed(seed)
 
+        # Initialize Board and Initial State
         self.reset()
 
+    # Board Seed
     def set_seed(self, seed):
         random.seed(seed)
         np.random.seed(seed)
 
+    # Resets Board (New Game)
     def reset(self):
-        """Reset the environment and return the initial one‑hot state."""
         self.n_clicks = 0
         self.n_progress = 0
         self.n_wins = 0
         self._init_grid()
         self._compute_board()
         self._init_state()
-        return self.state_im   # shape (n_rows, n_cols, 10)
+        return self.state_im
 
+    # Mine Placement
     def _init_grid(self):
-        """Place mines randomly."""
         self.grid.fill(None)
         mines_placed = 0
         while mines_placed < self.n_mines:
@@ -63,8 +65,8 @@ class MinesweeperEnv:
                 self.grid[r, c] = 'B'
                 mines_placed += 1
 
+    # Mine Surveyor
     def _get_neighbors(self, row, col):
-        """Return list of neighbour values from the grid."""
         neighbors = []
         for dr in (-1, 0, 1):
             for dc in (-1, 0, 1):
@@ -75,45 +77,40 @@ class MinesweeperEnv:
                     neighbors.append(self.grid[nr, nc])
         return neighbors
 
+    # Number Counting
     def _count_adjacent_mines(self, row, col):
         neighbors = self._get_neighbors(row, col)
         return sum(1 for v in neighbors if v == 'B')
 
+    # Number Placement
     def _compute_board(self):
-        """Build board with numbers 0‑8 for non‑mine cells."""
         self.board = self.grid.copy()
         for r in range(self.n_rows):
             for c in range(self.n_cols):
                 if self.board[r, c] != 'B':
                     self.board[r, c] = self._count_adjacent_mines(r, c)
 
+    # Wipes Board Clean
     def _init_state(self):
-        """Initialise state list with all 'U' (unknown)."""
         self.state = []
         for r in range(self.n_rows):
             for c in range(self.n_cols):
                 self.state.append({'coord': (r, c), 'value': 'U'})
         self._update_state_image()
 
+    # One-Hot Encoding Logic
     def _one_hot_cell(self, value):
-        """
-        Convert a cell value to a 10‑channel one‑hot vector.
-        Channels 0‑8: numbers 0‑8 (1 if matching, else 0)
-        Channel 9: 1 if unknown, else 0
-        """
         one_hot = [0.0] * 10
         if value == 'U':
             one_hot[9] = 1.0
         elif isinstance(value, (int, float)) and 0 <= value <= 8:
             one_hot[int(value)] = 1.0
-        # Mines ('B') should never appear in state_im because they are revealed as 'B' only upon loss.
-        # If they appear accidentally, treat as unknown (safe fallback).
         else:
             one_hot[9] = 1.0
         return one_hot
 
+    # Update Internal State Memory and Converts Board Into One-Hot Representation
     def _update_state_image(self):
-        """Build the one‑hot state image from the state list."""
         im = np.zeros((self.n_rows, self.n_cols, 10), dtype=np.float32)
         for idx, tile in enumerate(self.state):
             r = idx // self.n_cols
@@ -122,13 +119,13 @@ class MinesweeperEnv:
             im[r, c, :] = vec
         self.state_im = im
 
+    # Reveal Clicked Cell
     def _reveal_cell(self, row, col):
-        """Reveal a single cell (set its value in state list)."""
         idx = row * self.n_cols + col
         self.state[idx]['value'] = self.board[row, col]
 
+    # Recursive Reveal (DFS)
     def _reveal_neighbors(self, row, col, processed):
-        """Recursively reveal all zero‑value neighbours."""
         processed.append((row, col))
         for dr in (-1, 0, 1):
             for dc in (-1, 0, 1):
@@ -141,13 +138,14 @@ class MinesweeperEnv:
                     if self.board[nr, nc] == 0:
                         self._reveal_neighbors(nr, nc, processed)
 
+    # Click Consequence
     def click(self, action_index):
-        """Perform a click at the given action index (0..n_tiles-1)."""
+        # Reveals Number or Bomb
         r = action_index // self.n_cols
         c = action_index % self.n_cols
         value = self.board[r, c]
 
-        # First move safety: avoid mine on first click
+        # Redirect First Click to Random Safe Tile
         if value == 'B' and self.n_clicks == 0:
             safe_indices = []
             for i in range(self.n_tiles):
@@ -163,58 +161,48 @@ class MinesweeperEnv:
         else:
             self._reveal_cell(r, c)
 
-        # If the revealed cell is 0, reveal neighbours recursively
         if value == 0:
             self._reveal_neighbors(r, c, [])
 
         self.n_clicks += 1
 
+    # Game Process Logic
     def step(self, action_index):
-        """
-        Take an action, return (next_state, reward, done).
-        next_state is the one‑hot image.
-        """
-        # Keep a copy of the previous unknown count for progress detection
+        # Count Unknown Tiles
         prev_unknown = np.sum(self.state_im[:, :, 9] == 1)
 
+        # Board Coords & True Board
         r = action_index // self.n_cols
         c = action_index % self.n_cols
         neighbors = self._get_neighbors(r, c)
 
-        self.click(action_index)
-        self._update_state_image()
+        self.click(action_index)    # Performs Click Action
+        self._update_state_image()  # Rebuilds New State
 
+        # Default Return Values
         done = False
         reward = 0
 
-        # Loss: clicked on a mine
+        # Termination Condition
         if self.state[action_index]['value'] == 'B':
             reward = self.rewards['lose']
             done = True
-
-        # Win: all unknown cells are mines
+        
+        # Win condition
         elif np.sum(self.state_im[:, :, 9] == 1) == self.n_mines:
             reward = self.rewards['win']
             done = True
             self.n_progress += 1
             self.n_wins += 1
 
-        # No progress (unknown count unchanged)
-        elif np.sum(self.state_im[:, :, 9] == 1) == prev_unknown:
-            reward = self.rewards['no_progress']
-
-        # Progress made
+        # Progress
         else:
-            # Guess? All neighbours are unknown (value 'U')
-            if all(n == 'U' for n in neighbors):
-                reward = self.rewards['guess']
-            else:
-                reward = self.rewards['progress']
-                self.n_progress += 1
+            reward = self.rewards['progress']
+            self.n_progress += 1
 
         return self.state_im, reward, done
 
-    # Optional: simple text display for debugging
+    # Visual Debugging Purposes
     def draw_state(self):
         grid_display = np.full((self.n_rows, self.n_cols), '?', dtype=str)
         for idx, tile in enumerate(self.state):

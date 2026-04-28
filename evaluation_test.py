@@ -7,7 +7,7 @@ from minesweeper_env import MinesweeperEnv
 DQN_MODEL_PATH = 'dqn/dqn_best.keras'
 CAEDQN_MODEL_PATH = 'caedqn/caedqn_best.keras'
 EVAL_SEED = 300
-EPISODES = 50          # change this if you want more/less episodes
+EPISODES = 50
 ROWS, COLS, MINES = 6, 6, 4
 # =======================================================
 
