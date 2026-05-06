@@ -8,12 +8,12 @@ from minesweeper_env import MinesweeperEnv
 # ==================== CONFIGURATION ====================
 AGENT_TYPE = 'dqn'                          # 'dqn' or 'caedqn'
 MODEL_PATH = 'dqn/dqn_best.keras'           # path to model
-NUM_EPISODES = 50                           # total episodes to run
+NUM_EPISODES = 4                           # total episodes to run
 AUTO_ADVANCE = True                         # True = auto next episode, False = press Enter to continue
 # =======================================================
 
 # Environment settings
-TIME = 0.01
+TIME = 0.
 BASE_SEED = 300          
 ROWS, COLS, MINES = 6, 6, 4
 

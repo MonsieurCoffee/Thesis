@@ -1,0 +1,5 @@
+algorithm,episodes,win_rate,avg_reward,avg_clicks,avg_progress,avg_logical_moves,avg_forced_guesses,forced_guess_rate
+CAE-DQN,2500,0.696,20.0728,6.9608,6.6568,,,
+DQN,2500,0.58,11.3696,6.6096,6.1896,,,
+Random Picker,2500,0.0284,-30.6924,4.2628,3.2912,0.0,4.2628,1.0
+Rule-Based Deterministic,2500,0.7428,23.842,7.3604,7.1032,4.974,2.3864,0.4371300400000023

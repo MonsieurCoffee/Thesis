@@ -1,0 +1,13 @@
+algorithm,eval_seed,episodes,win_rate,avg_reward,avg_clicks,avg_progress,avg_logical_moves,avg_forced_guesses,forced_guess_rate
+Random Picker,1,500,0.02,-31.39,4.17,3.19,0.0,4.17,1.0
+Random Picker,2,500,0.034,-30.208,4.344,3.378,0.0,4.344,1.0
+Random Picker,3,500,0.02,-31.204,4.356,3.376,0.0,4.356,1.0
+Random Picker,4,500,0.026,-30.912,4.216,3.242,0.0,4.216,1.0
+Random Picker,5,500,0.042,-29.748,4.228,3.27,0.0,4.228,1.0
+Rule-Based Deterministic,1,500,0.742,23.632,7.208,6.95,4.856,2.352,0.4402
+Rule-Based Deterministic,2,500,0.774,26.232,7.504,7.278,5.16,2.344,0.4086
+Rule-Based Deterministic,3,500,0.732,23.006,7.302,7.034,4.93,2.372,0.4463
+Rule-Based Deterministic,4,500,0.714,21.796,7.388,7.102,4.852,2.536,0.4625
+Rule-Based Deterministic,5,500,0.752,24.544,7.4,7.152,5.072,2.328,0.428
+Random Picker,overall,2500,0.0284,-30.6924,4.2628,3.2912,0.0,4.2628,1.0
+Rule-Based Deterministic,overall,2500,0.7428,23.842,7.3604,7.1032,4.974,2.3864,0.4371

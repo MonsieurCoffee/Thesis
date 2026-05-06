@@ -1,0 +1,6 @@
+item,value,unit,notes
+single_state_float32,1440,bytes,6x6x10 one-hot observation
+single_transition_raw,2889,bytes,"state, next_state, action, reward, done; excludes Python overhead"
+replay_buffer_raw,826.5495,MiB,"300,000 transitions, excludes deque/object overhead"
+cae_A_and_A_inv,0.25,MiB,two 128x128 float64 matrices
+tensorflow_status,skipped by --skip-timing,,Timing columns are filled only when TensorFlow is available

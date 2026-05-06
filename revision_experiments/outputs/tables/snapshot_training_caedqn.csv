@@ -1,0 +1,5 @@
+episode,total_reward,progress,win,n_clicks,recent_win_rate,recent_median_progress,recent_median_reward,time_elapsed,checkpoint_path
+20000,-26.101,8,0,9,0.5148,5.0,37.497,2758.88,D:\Documents\COLLEGE\SEMESTER 8\experiment\revision_experiments\outputs\snapshots\caedqn\checkpoint_ep_020000.keras
+40000,47.4353,10,1,10,0.672,6.0,41.1406,5392.78,D:\Documents\COLLEGE\SEMESTER 8\experiment\revision_experiments\outputs\snapshots\caedqn\checkpoint_ep_040000.keras
+60000,43.1008,7,1,7,0.5286,6.0,38.3862,8071.41,D:\Documents\COLLEGE\SEMESTER 8\experiment\revision_experiments\outputs\snapshots\caedqn\checkpoint_ep_060000.keras
+80000,42.4995,6,1,6,0.2158,4.0,-30.5314,10251.5,D:\Documents\COLLEGE\SEMESTER 8\experiment\revision_experiments\outputs\snapshots\caedqn\checkpoint_ep_080000.keras

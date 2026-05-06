@@ -1,0 +1,3 @@
+algorithm,trainable_params,forward_macs_per_state,extra_cae_ops_per_action,single_model_weight_mib,main_plus_target_weight_mib,extra_cae_matrix_memory_mib,network_forward_ms_per_state,network_train_step_ms_per_batch,cae_bonus_update_ms_per_action
+DQN,190148,935680,0,0.7254,1.4507,0.0,,,0.0
+CAE-DQN,190148,935680,32768,0.7254,1.4507,0.25,,,
